@@ -6,6 +6,8 @@
 #include <cstdlib>
 #include <ios>
 
+#include "Image.h"
+
 using namespace std;
 
 int main(int argc, char * argv[]){
@@ -15,9 +17,13 @@ int main(int argc, char * argv[]){
     string clusterArg = "-k";
     string widthArg = "-bin";
 
-    string outputFileName;
+    string outputPath = "./Output/";
+    /* Default Values */
+    string outputFileName = "Defualt";
     int numberOfClusters = 10;
     int binWidth = 1;
+
+    Image image;
 
     if(argc > 2){
         for(int i = 2; i < argc; i++){
@@ -27,11 +33,9 @@ int main(int argc, char * argv[]){
             if(current.compare(outputArg) == 0){
                 outputFileName = argv[i+1];
             }
-
             if(current.compare(clusterArg) == 0){
                 numberOfClusters = stoi(argv[i+1]);
             }
-
             if(current.compare(widthArg) == 0){
                 binWidth = stoi(argv[i+1]);
             }
@@ -44,10 +48,12 @@ int main(int argc, char * argv[]){
         << "\nNumber Of Clusters:\t" << numberOfClusters 
         << "\nBin Width:\t\t" << binWidth 
         << "\n----------------------------------------\n\n";
-        
+
+        image.loadImage(dataset+"/eight_1.ppm");
+
     }
     else{
         cout << "Incorrect Command Line Parameters";
     }
-    
+
 }

@@ -19,25 +19,35 @@ void Image::loadImage(string fileName){
     std::stringstream ss;
     string line = "";
 
-    getline(inputFile, line);
+    if(inputFile){
+        getline(inputFile, line);
 
-    string current = getline(inputFile, line);
-    cout << current[0];
+        ss << inputFile.rdbuf();
+        ss >> columns >> rows;
 
-    ss >> columns >> rows;
+        int maxValue;
+        ss >> maxValue;
+        // cout << maxValue << "\n\n";
 
-    int maxVal;
-    ss >> maxVal;
+        int width = columns;
+        int height = rows;
+        // cout << width << " " << height << "\n\n";
 
-    width = columns;
-    height = rows;
 
-    data = std::make_unique<unsigned char[]>(width * height);
 
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            ss >> noskipws >> data.get()[width * i + j];
-        }
+        inputFile.close();
+    }
+    else{
+        cout << "File Not Found" << "\n\n";
     }
 
+}
+
+Image::Image(){
+    height = 0;
+    width = 0;
+}
+
+Image::~Image(){
+    
 }

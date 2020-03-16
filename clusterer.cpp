@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <ios>
 
-#include "Image.h"
+#include "Image.cpp"
 
 using namespace std;
 
@@ -42,20 +42,15 @@ int main(int argc, char * argv[]){
         }
 
         cout << "\nCheck Command Line Parameters"
-        << "\n----------------------------------------\n"
+        << "\n-----------------------------------------------\n"
         << "Dataset:\t\t" << dataset 
         << "\nOutput File Name:\t" << outputFileName 
         << "\nNumber Of Clusters:\t" << numberOfClusters 
         << "\nBin Width:\t\t" << binWidth 
-        << "\n----------------------------------------\n\n";
+        << "\n-----------------------------------------------\n\n";
 
         image.loadImage(dataset+"/eight_1.ppm");
-
     }
-    else{
-        cout << "Incorrect Command Line Parameters";
-    }
-
+    
     return 0;
-
 }

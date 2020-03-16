@@ -14,13 +14,12 @@ class Image{
     private:
         int width;
         int height;
-        std::unique_ptr<unsigned char[]> data;
+        std::vector<unsigned char**> data;
+        std::vector<unsigned char*> histogram;
 
     public:
-        Image(){
-            width = 0;
-            height = 0;
-        }
+        Image();
+        ~Image();
         void loadImage(std::string fileName);
 };
 

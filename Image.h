@@ -15,8 +15,12 @@ class Image{
         int width;
         int height;
         std::unique_ptr<unsigned char[]> data;
-        
+
     public:
+        Image(){
+            width = 0;
+            height = 0;
+        }
         void loadImage(std::string fileName);
 };
 

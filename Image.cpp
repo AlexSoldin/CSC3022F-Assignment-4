@@ -50,15 +50,40 @@ void SLDALE003::Image::loadImage(string fileName){
 }
 
 void SLDALE003::Image::generateHistogram(const int binSize){
-    int histogramLength = 256/binSize;
-    histogram = new int [histogramLength];
-    cout << "Length of Histogram: " << histogramLength << "\nHistogram Data: [";
+    if(binSize == 1){
+        int histogramLength = 256/binSize;
+        histogram = new int [histogramLength];
 
-	for(int i = 0; i < size; i += binSize){
-        int index = stoi(to_string(data[i]));
-        histogram[index]++;
+        for(int i = 0; i < size; i++){
+            int value = stoi(to_string(data[i]));
+            histogram[value]++;
+        }
+    }
+    else{
+
+        int * tempHistogram = new int [size];
+
+        for(int i = 0; i < size; i++){
+            int value = stoi(to_string(data[i]));
+            tempHistogram[value]++;
+        }
+
+        int histogramLength = 256/binSize;
+        histogram = new int [histogramLength];
+
+            int index = 0;
+            for(int i = 0; i < size; i += binSize){
+                for(int j = i; j < i+binSize; j++)
+                    histogram[index] += tempHistogram[j];
+                index++;
+            }   
     }
 
+    
+    
+
+    /* Display Histogram */ 
+    cout << "Length of Histogram: " << histogramLength << "\nHistogram Data: [ ";
     for(int i = 0; i < histogramLength; i++){
         cout << histogram[i] << " ";
     }

@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void Image::loadImage(string fileName){
+void SLDALE003::Image::loadImage(string fileName){
 
     int rows = 0;
     int columns = 0;
@@ -27,27 +27,51 @@ void Image::loadImage(string fileName){
 
         int maxValue;
         ss >> maxValue;
-        // cout << maxValue << "\n\n";
 
-        int width = columns;
-        int height = rows;
-        // cout << width << " " << height << "\n\n";
+        width = columns;
+        height = rows;
 
+        cout << "\nWidth: " << width << "\nHeight: " << height << "\nMax Value: " << maxValue << "\n\n";
+        
+        data = new unsigned char [width * height];
+        int size = columns * rows * 3;
 
+        inputFile.read((char*)data, size);
+        // displayImageGrid(data);
 
         inputFile.close();
     }
     else{
-        cout << "File Not Found" << "\n\n";
+        cout << "File Not Found\n\n";
     }
 
 }
 
-Image::Image(){
+void SLDALE003::Image::generateHistogram(const int binSize){
+
+}
+
+void SLDALE003::Image::displayImageGrid(unsigned char * toDisplay){
+    for(int i=0; i<height; i++){
+        for(int j=0; j<width; j++){
+            string out = to_string(toDisplay[i*height + j]);
+            if(out.length() == 3)
+                cout << out << "  ";
+            if(out.length() == 2)
+                cout << out << "   ";
+            if(out.length() == 1)
+                cout << out << "    ";
+        }
+       cout << "\n";
+    }
+    cout << "\n\n";
+}
+
+SLDALE003::Image::Image(){
     height = 0;
     width = 0;
 }
 
-Image::~Image(){
-    
+SLDALE003::Image::~Image(){
+   
 }

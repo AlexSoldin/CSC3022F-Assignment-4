@@ -21,9 +21,9 @@ int main(int argc, char * argv[]){
     /* Default Values */
     string outputFileName = "Defualt";
     int numberOfClusters = 10;
-    int binWidth = 1;
+    int binSize = 1;
 
-    Image image;
+    SLDALE003::Image image;
 
     if(argc > 2){
         for(int i = 2; i < argc; i++){
@@ -37,7 +37,7 @@ int main(int argc, char * argv[]){
                 numberOfClusters = stoi(argv[i+1]);
             }
             if(current.compare(widthArg) == 0){
-                binWidth = stoi(argv[i+1]);
+                binSize = stoi(argv[i+1]);
             }
         }
 
@@ -46,10 +46,14 @@ int main(int argc, char * argv[]){
         << "Dataset:\t\t" << dataset 
         << "\nOutput File Name:\t" << outputFileName 
         << "\nNumber Of Clusters:\t" << numberOfClusters 
-        << "\nBin Width:\t\t" << binWidth 
+        << "\nBin Width:\t\t" << binSize 
         << "\n-----------------------------------------------\n\n";
 
         image.loadImage(dataset+"/eight_1.ppm");
+        
+    }
+    else{
+        cout << "Incorrect Command Line Parameters\n\n";
     }
     
     return 0;

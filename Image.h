@@ -10,17 +10,21 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-class Image{
-    private:
-        int width;
-        int height;
-        std::vector<unsigned char**> data;
-        std::vector<unsigned char*> histogram;
+namespace SLDALE003{
+    class Image{
+        private:
+            int width;
+            int height;
+            unsigned char * data;
 
-    public:
-        Image();
-        ~Image();
-        void loadImage(std::string fileName);
-};
+        public:
+            Image();
+            ~Image();
+
+            void loadImage(std::string fileName);
+            void generateHistogram(const int binSize);
+            void displayImageGrid(unsigned char * toDisplay);
+    };
+}
 
 #endif

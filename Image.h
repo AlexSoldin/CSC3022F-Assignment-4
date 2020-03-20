@@ -15,7 +15,9 @@ namespace SLDALE003{
         private:
             int width;
             int height;
+            int size;
             unsigned char * data;
+            int * histogram;
 
         public:
             Image();

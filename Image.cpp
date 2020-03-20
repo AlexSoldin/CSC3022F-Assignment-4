@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <cstdlib>
 #include <ios>
 
@@ -33,11 +34,12 @@ void SLDALE003::Image::loadImage(string fileName){
 
         cout << "\nWidth: " << width << "\nHeight: " << height << "\nMax Value: " << maxValue << "\n\n";
         
-        data = new unsigned char [width * height];
-        int size = columns * rows * 3;
+        size = columns * rows * 3;
+        data = new unsigned char [size];
 
         inputFile.read((char*)data, size);
         // displayImageGrid(data);
+        generateHistogram(1);
 
         inputFile.close();
     }
@@ -48,7 +50,19 @@ void SLDALE003::Image::loadImage(string fileName){
 }
 
 void SLDALE003::Image::generateHistogram(const int binSize){
+    int histogramLength = 256/binSize;
+    histogram = new int [histogramLength];
+    cout << "Length of Histogram: " << histogramLength << "\nHistogram Data: [";
 
+	for(int i = 0; i < size; i += binSize){
+        int index = stoi(to_string(data[i]));
+        histogram[index]++;
+    }
+
+    for(int i = 0; i < histogramLength; i++){
+        cout << histogram[i] << " ";
+    }
+    cout << "]\n\n";
 }
 
 void SLDALE003::Image::displayImageGrid(unsigned char * toDisplay){
@@ -73,5 +87,5 @@ SLDALE003::Image::Image(){
 }
 
 SLDALE003::Image::~Image(){
-   
+
 }

@@ -49,7 +49,7 @@ int main(int argc, char * argv[]){
         << "\nBin Width:\t\t" << binSize 
         << "\n-----------------------------------------------\n\n";
 
-        image.loadImage(dataset+"/eight_1.ppm");
+        image.loadImage(dataset+"/five_3.ppm");
         
     }
     else{

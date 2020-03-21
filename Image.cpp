@@ -35,11 +35,23 @@ void SLDALE003::Image::loadImage(string fileName){
         cout << "\nWidth: " << width << "\nHeight: " << height << "\nMax Value: " << maxValue << "\n\n";
         
         size = columns * rows * 3;
-        data = new unsigned char [size];
+        unsigned char * inputData = new unsigned char [size];
 
-        inputFile.read((char*)data, size);
-        // displayImageGrid(data);
-        generateHistogram(1);
+        inputFile.read((char*)inputData, size);
+
+        data = new unsigned char [width*height];
+
+        /* Colour Conversion Equation Implementation */
+        int index = 0;
+        int sumCounter = 0;
+        while(sumCounter < (size-2)){
+            data[index] = 0.21*inputData[sumCounter] + 0.72*inputData[sumCounter+1] + 0.07*inputData[sumCounter+2];
+            index++;
+            sumCounter += 3;
+        }
+
+        displayImageGrid(data);
+        generateHistogram(4);
 
         inputFile.close();
     }
@@ -50,17 +62,16 @@ void SLDALE003::Image::loadImage(string fileName){
 }
 
 void SLDALE003::Image::generateHistogram(const int binSize){
-    if(binSize == 1){
-        int histogramLength = 256/binSize;
-        histogram = new int [histogramLength];
+    int histogramLength = 256/binSize;
+    histogram = new int [histogramLength];
 
+    if(binSize == 1){
         for(int i = 0; i < size; i++){
             int value = stoi(to_string(data[i]));
             histogram[value]++;
         }
     }
     else{
-
         int * tempHistogram = new int [size];
 
         for(int i = 0; i < size; i++){

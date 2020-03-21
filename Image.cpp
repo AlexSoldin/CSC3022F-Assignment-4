@@ -34,31 +34,32 @@ void SLDALE003::Image::loadImage(string fileName){
 
         cout << "\nWidth: " << width << "\nHeight: " << height << "\nMax Value: " << maxValue << "\n\n";
         
-        size = columns * rows * 3;
-        unsigned char * inputData = new unsigned char [size];
+        size = width*height;
+        int sizeInput = columns * rows * 3;
+        unsigned char * inputData = new unsigned char [sizeInput];
 
-        inputFile.read((char*)inputData, size);
+        inputFile.read((char*)inputData, sizeInput);
 
-        data = new unsigned char [width*height];
+        data = new unsigned char [size];
 
         /* Colour Conversion Equation Implementation */
         int index = 0;
         int sumCounter = 0;
-        while(sumCounter < (size-2)){
+        while(sumCounter < (sizeInput-2)){
             data[index] = 0.21*inputData[sumCounter] + 0.72*inputData[sumCounter+1] + 0.07*inputData[sumCounter+2];
             index++;
             sumCounter += 3;
         }
 
-        displayImageGrid(data);
-        generateHistogram(4);
+        // displayImageGrid(data);
+        // generateHistogram(1);
+        // generateHistogram(4);
 
         inputFile.close();
     }
     else{
         cout << "File Not Found\n\n";
     }
-
 }
 
 void SLDALE003::Image::generateHistogram(const int binSize){
@@ -79,19 +80,13 @@ void SLDALE003::Image::generateHistogram(const int binSize){
             tempHistogram[value]++;
         }
 
-        int histogramLength = 256/binSize;
-        histogram = new int [histogramLength];
-
-            int index = 0;
-            for(int i = 0; i < size; i += binSize){
-                for(int j = i; j < i+binSize; j++)
-                    histogram[index] += tempHistogram[j];
-                index++;
-            }   
+        int index = 0;
+        for(int i = 0; i < size; i += binSize){
+            for(int j = i; j < i+binSize; j++)
+                histogram[index] += tempHistogram[j];
+            index++;
+        }   
     }
-
-    
-    
 
     /* Display Histogram */ 
     cout << "Length of Histogram: " << histogramLength << "\nHistogram Data: [ ";
@@ -102,6 +97,7 @@ void SLDALE003::Image::generateHistogram(const int binSize){
 }
 
 void SLDALE003::Image::displayImageGrid(unsigned char * toDisplay){
+    // When colour conversion is implemented, can see the PPM image clearly
     for(int i=0; i<height; i++){
         for(int j=0; j<width; j++){
             string out = to_string(toDisplay[i*height + j]);

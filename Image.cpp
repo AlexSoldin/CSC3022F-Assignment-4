@@ -39,24 +39,21 @@ void SLDALE003::Image::loadImage(string fileName){
         unsigned char * inputData = new unsigned char [sizeInput];
 
         inputFile.read((char*)inputData, sizeInput);
-
-        data = new unsigned char [size];
+        inputFile.close();
 
         /* Colour Conversion Equation Implementation */
-        int index = 0;
         int sumCounter = 0;
         while(sumCounter < (sizeInput-2)){
-            data[index] = 0.21*inputData[sumCounter] + 0.72*inputData[sumCounter+1] + 0.07*inputData[sumCounter+2];
-            index++;
+            data.push_back(0.21*inputData[sumCounter] + 0.72*inputData[sumCounter+1] + 0.07*inputData[sumCounter+2]);
             sumCounter += 3;
         }
 
+        // cout << fileName << "\n";
         displayImageGrid(data);
-        // generateHistogram(1);
+        generateHistogram(1);
         // generateHistogram(4);
-        // cout << "Histogram Mean: " << histogramMean(histogram, histogramLength) << "\n\n";
-
-        inputFile.close();
+        cout << "Histogram Mean: " << histogramMean() << "\n\n";
+        
     }
     else{
         cout << "File Not Found\n\n";
@@ -64,50 +61,53 @@ void SLDALE003::Image::loadImage(string fileName){
 }
 
 void SLDALE003::Image::generateHistogram(const int binSize){
-    histogramLength = 256/binSize;
-    histogram = new int [histogramLength];
+    int histogramLength = 256/binSize;
+
+    for(int i=0; i<histogramLength;i++){
+        histogram.push_back(0);
+    }
 
     if(binSize == 1){
-        for(int i = 0; i < size; i++){
+        for(int i = 0; i < data.size(); i++){
             int value = stoi(to_string(data[i]));
             histogram[value]++;
         }
     }
     else{
-        int * tempHistogram = new int [size];
+        vector<int> tempHistogram(data.size(), 0);
 
-        for(int i = 0; i < size; i++){
+        for(int i = 0; i < data.size(); i++){
             int value = stoi(to_string(data[i]));
             tempHistogram[value]++;
         }
 
         int index = 0;
-        for(int i = 0; i < size; i += binSize){
+        for(int i = 0; i < data.size(); i += binSize){
             for(int j = i; j < i+binSize; j++){
                 histogram[index] += tempHistogram[j];
             }   
             index++;
-        }   
+        }
     }
 
     /* Display Histogram */ 
     cout << "Length of Histogram: " << histogramLength << "\nHistogram Data: [ ";
-    for(int i = 0; i < histogramLength; i++){
+    for(int i = 0; i < histogram.size(); i++){
         cout << histogram[i] << " ";
     }
     cout << "]\n\n";
 }
 
-int SLDALE003::Image::histogramMean(const int * histogram, const int histogramLength){
+int SLDALE003::Image::histogramMean(){
     int sum = 0;
-    for(int i=0; i< histogramLength; i++){
+    for(int i=0; i< histogram.size(); i++){
         sum += histogram[i];
     }
-    int mean = sum/histogramLength;
+    int mean = sum/histogram.size();
     return mean;
 }
 
-void SLDALE003::Image::displayImageGrid(unsigned char * toDisplay){
+void SLDALE003::Image::displayImageGrid(vector<unsigned char>toDisplay){
     // When colour conversion is implemented, can see the PPM image clearly
     for(int i=0; i<height; i++){
         for(int j=0; j<width; j++){
@@ -128,9 +128,10 @@ SLDALE003::Image::Image(){
     height = 0;
     width = 0;
     size = 0;
-    histogramLength = 0;
 }
 
-SLDALE003::Image::~Image(){
+SLDALE003::Image::~Image(){}
 
+vector<int> SLDALE003::Image::getHistogram(){
+    return histogram;
 }

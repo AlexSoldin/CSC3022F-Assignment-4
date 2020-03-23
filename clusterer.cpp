@@ -48,7 +48,7 @@ int main(int argc, char * argv[]){
     int numberOfClusters = 10;
     int binSize = 1;
 
-    vector<SLDALE003::Image> images;
+    vector<int *> histograms;
 
     if(argc > 2){
         for(int i = 2; i < argc; i++){
@@ -82,13 +82,17 @@ int main(int argc, char * argv[]){
         vector<string> datasetFiles(begin, end);
         copy(datasetFiles.begin(), datasetFiles.end(), ostream_iterator<string>(cout, "\n"));
     
+        // for(int i = 0; i < datasetFiles.size(); i++){
+        //     SLDALE003::Image imageInstance;
+        //     string fileInstance = datasetFiles[i];
+        //     imageInstance.loadImage(dataset+"/"+fileInstance);
+        //     imageInstance.generateHistogram(binSize);
+        //     images.push_back(imageInstance.loadImage(dataset+"/"+fileInstance));
+        // }
         for(int i = 0; i < datasetFiles.size(); i++){
-            SLDALE003::Image imageInstance;
-            string fileInstance = datasetFiles[i];
-            imageInstance.loadImage(dataset+"/"+fileInstance);
-            images.push_back(imageInstance);
+            SLDALE003::Image image;
+            image.loadImage(dataset+"/"+datasetFiles[i]);
         }
-
     }
     else{
         cout << "Incorrect Command Line Parameters\n\n";

@@ -16,18 +16,19 @@ namespace SLDALE003{
             int width;
             int height;
             int size;
-            unsigned char * data;
-            int histogramLength;
-            int * histogram;
+            std::vector<unsigned char> data;
+            std::vector<int> histogram;
 
         public:
             Image();
             ~Image();
 
+            std::vector<int> getHistogram();
+
             void loadImage(std::string fileName);
             void generateHistogram(const int binSize);
-            int histogramMean(const int * histogram, const int histogramLength);
-            void displayImageGrid(unsigned char * toDisplay);
+            int histogramMean();
+            void displayImageGrid(std::vector<unsigned char> toDisplay);
     };
 }
 

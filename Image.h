@@ -17,6 +17,7 @@ namespace SLDALE003{
             int height;
             int size;
             unsigned char * data;
+            int histogramLength;
             int * histogram;
 
         public:
@@ -25,6 +26,7 @@ namespace SLDALE003{
 
             void loadImage(std::string fileName);
             void generateHistogram(const int binSize);
+            int histogramMean(const int * histogram, const int histogramLength);
             void displayImageGrid(unsigned char * toDisplay);
     };
 }

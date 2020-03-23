@@ -51,9 +51,10 @@ void SLDALE003::Image::loadImage(string fileName){
             sumCounter += 3;
         }
 
-        // displayImageGrid(data);
+        displayImageGrid(data);
         // generateHistogram(1);
         // generateHistogram(4);
+        // cout << "Histogram Mean: " << histogramMean(histogram, histogramLength) << "\n\n";
 
         inputFile.close();
     }
@@ -63,7 +64,7 @@ void SLDALE003::Image::loadImage(string fileName){
 }
 
 void SLDALE003::Image::generateHistogram(const int binSize){
-    int histogramLength = 256/binSize;
+    histogramLength = 256/binSize;
     histogram = new int [histogramLength];
 
     if(binSize == 1){
@@ -82,8 +83,9 @@ void SLDALE003::Image::generateHistogram(const int binSize){
 
         int index = 0;
         for(int i = 0; i < size; i += binSize){
-            for(int j = i; j < i+binSize; j++)
+            for(int j = i; j < i+binSize; j++){
                 histogram[index] += tempHistogram[j];
+            }   
             index++;
         }   
     }
@@ -94,6 +96,15 @@ void SLDALE003::Image::generateHistogram(const int binSize){
         cout << histogram[i] << " ";
     }
     cout << "]\n\n";
+}
+
+int SLDALE003::Image::histogramMean(const int * histogram, const int histogramLength){
+    int sum = 0;
+    for(int i=0; i< histogramLength; i++){
+        sum += histogram[i];
+    }
+    int mean = sum/histogramLength;
+    return mean;
 }
 
 void SLDALE003::Image::displayImageGrid(unsigned char * toDisplay){
@@ -116,6 +127,8 @@ void SLDALE003::Image::displayImageGrid(unsigned char * toDisplay){
 SLDALE003::Image::Image(){
     height = 0;
     width = 0;
+    size = 0;
+    histogramLength = 0;
 }
 
 SLDALE003::Image::~Image(){

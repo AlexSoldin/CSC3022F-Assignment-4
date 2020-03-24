@@ -36,9 +36,16 @@ void SLDALE003::Image::loadImage(string fileName){
         
         size = width*height;
         int sizeInput = columns * rows * 3;
-        unsigned char * inputData = new unsigned char [sizeInput];
+        // unsigned char * inputData = new unsigned char [sizeInput];
+        vector<unsigned char> inputData;
 
-        inputFile.read((char*)inputData, sizeInput);
+        unsigned char instance = 0;
+        while(!inputFile.eof()){
+            inputFile >> instance >> ws; //ignores whitespace and adds each value to int vector
+            inputData.push_back(instance);
+        }
+
+        // inputFile.read(inputDataHolder, sizeInput);
         inputFile.close();
 
         /* Colour Conversion Equation Implementation */
@@ -48,11 +55,11 @@ void SLDALE003::Image::loadImage(string fileName){
             sumCounter += 3;
         }
 
-        // cout << fileName << "\n";
-        displayImageGrid(data);
+        cout << fileName << "\n";
+        // displayImageGrid(data);
         generateHistogram(1);
         // generateHistogram(4);
-        cout << "Histogram Mean: " << histogramMean() << "\n\n";
+        // cout << "Histogram Mean: " << histogramMean() << "\n\n";
         
     }
     else{
@@ -108,7 +115,7 @@ int SLDALE003::Image::histogramMean(){
 }
 
 void SLDALE003::Image::displayImageGrid(vector<unsigned char>toDisplay){
-    // When colour conversion is implemented, can see the PPM image clearly
+    // When colour conversion is implemented, can see the PPM image
     for(int i=0; i<height; i++){
         for(int j=0; j<width; j++){
             string out = to_string(toDisplay[i*height + j]);

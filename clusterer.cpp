@@ -48,7 +48,7 @@ int main(int argc, char * argv[]){
     int numberOfClusters = 10;
     int binSize = 1;
 
-    vector<int *> histograms;
+    vector<vector <int> > histograms;
 
     if(argc > 2){
         for(int i = 2; i < argc; i++){
@@ -80,7 +80,7 @@ int main(int argc, char * argv[]){
         istream_iterator<string> begin(ss);
         istream_iterator<string> end;
         vector<string> datasetFiles(begin, end);
-        copy(datasetFiles.begin(), datasetFiles.end(), ostream_iterator<string>(cout, "\n"));
+        // copy(datasetFiles.begin(), datasetFiles.end(), ostream_iterator<string>(cout, "\n")); //not returned in order
     
         // for(int i = 0; i < datasetFiles.size(); i++){
         //     SLDALE003::Image imageInstance;
@@ -90,8 +90,18 @@ int main(int argc, char * argv[]){
         //     images.push_back(imageInstance.loadImage(dataset+"/"+fileInstance));
         // }
         for(int i = 0; i < datasetFiles.size(); i++){
-            SLDALE003::Image image;
-            image.loadImage(dataset+"/"+datasetFiles[i]);
+            SLDALE003::Image imageInstance;
+            imageInstance.loadImage(dataset+"/"+datasetFiles[i]);
+            imageInstance.generateHistogram(binSize);
+            histograms.push_back(imageInstance.getHistogram());
+        }
+
+        for(int i = 0; i < histograms.size(); i++){
+            cout << "Histogram " << i << ": [";
+            for(int j =0; j < histograms[i].size(); j++){
+                cout << histograms[i][j] << " ";
+            }
+            cout << "]\n\n";
         }
     }
     else{

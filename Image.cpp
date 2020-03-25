@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ios>
+#include <cmath>
 
 #include "Image.h"
 
@@ -32,11 +33,10 @@ void SLDALE003::Image::loadImage(string fileName){
         width = columns;
         height = rows;
 
-        cout << "\nWidth: " << width << "\nHeight: " << height << "\nMax Value: " << maxValue << "\n\n";
+        // cout << "\nWidth: " << width << "\nHeight: " << height << "\nMax Value: " << maxValue << "\n\n";
         
         size = width*height;
         int sizeInput = columns * rows * 3;
-        // unsigned char * inputData = new unsigned char [sizeInput];
         vector<unsigned char> inputData;
 
         unsigned char instance = 0;
@@ -45,7 +45,6 @@ void SLDALE003::Image::loadImage(string fileName){
             inputData.push_back(instance);
         }
 
-        // inputFile.read(inputDataHolder, sizeInput);
         inputFile.close();
 
         /* Colour Conversion Equation Implementation */
@@ -55,11 +54,8 @@ void SLDALE003::Image::loadImage(string fileName){
             sumCounter += 3;
         }
 
-        cout << fileName << "\n";
+        // cout << fileName << "\n";
         // displayImageGrid(data);
-        generateHistogram(1);
-        // generateHistogram(4);
-        // cout << "Histogram Mean: " << histogramMean() << "\n\n";
         
     }
     else{
@@ -105,13 +101,24 @@ void SLDALE003::Image::generateHistogram(const int binSize){
     cout << "]\n\n";
 }
 
-int SLDALE003::Image::histogramMean(){
-    int sum = 0;
-    for(int i=0; i< histogram.size(); i++){
+double SLDALE003::Image::histogramMean(const int binSize){
+    double sum = 0;
+    for(int i=0; i < histogram.size(); i++){
         sum += histogram[i];
     }
-    int mean = sum/histogram.size();
+    double mean = sum / histogram.size();
+    cout << "Histogram Mean: " << mean << "\n\n"; 
     return mean;
+}
+
+/* Squared Euclidean Distance */
+double SLDALE003::Image::getDistance(Image &other){
+    double squareDistance = 0;
+    for(int i = 0; i < histogram.size(); i++){
+        int value = histogram[i] - other.histogram[i];
+        squareDistance += pow(value, 2);
+    }
+    return squareDistance;
 }
 
 void SLDALE003::Image::displayImageGrid(vector<unsigned char>toDisplay){

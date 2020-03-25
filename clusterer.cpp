@@ -48,7 +48,8 @@ int main(int argc, char * argv[]){
     int numberOfClusters = 10;
     int binSize = 1;
 
-    vector<vector <int> > histograms;
+    vector<vector <int>> histograms;
+    vector<double> histogramMeans;
 
     if(argc > 2){
         for(int i = 2; i < argc; i++){
@@ -74,7 +75,7 @@ int main(int argc, char * argv[]){
         << "\nBin Width:\t\t" << binSize 
         << "\n-----------------------------------------------\n\n";
 
-        //Populate datasetFiles with all file names contained in the dataset directory
+        /* Populate datasetFiles with all file names contained in the dataset directory */
         string ls = exec("cd "+dataset+" && ls"); //&& is used because it will only move to 'ls' command if 'cd' command works
         stringstream ss(ls);
         istream_iterator<string> begin(ss);
@@ -82,27 +83,22 @@ int main(int argc, char * argv[]){
         vector<string> datasetFiles(begin, end);
         // copy(datasetFiles.begin(), datasetFiles.end(), ostream_iterator<string>(cout, "\n")); //not returned in order
     
-        // for(int i = 0; i < datasetFiles.size(); i++){
-        //     SLDALE003::Image imageInstance;
-        //     string fileInstance = datasetFiles[i];
-        //     imageInstance.loadImage(dataset+"/"+fileInstance);
-        //     imageInstance.generateHistogram(binSize);
-        //     images.push_back(imageInstance.loadImage(dataset+"/"+fileInstance));
-        // }
         for(int i = 0; i < datasetFiles.size(); i++){
             SLDALE003::Image imageInstance;
             imageInstance.loadImage(dataset+"/"+datasetFiles[i]);
             imageInstance.generateHistogram(binSize);
+            double meanInstance = imageInstance.histogramMean(binSize);
             histograms.push_back(imageInstance.getHistogram());
+            histogramMeans.push_back(meanInstance);
         }
 
-        for(int i = 0; i < histograms.size(); i++){
-            cout << "Histogram " << i << ": [";
-            for(int j =0; j < histograms[i].size(); j++){
-                cout << histograms[i][j] << " ";
-            }
-            cout << "]\n\n";
-        }
+        // for(int i = 0; i < histograms.size(); i++){
+        //     cout << "Histogram " << i << "\nMean: " << histogramMeans[i] << "\n[ ";
+        //     for(int j =0; j < histograms[i].size(); j++){
+        //         cout << histograms[i][j] << " ";
+        //     }
+        //     cout << "]\n\n";
+        // }
     }
     else{
         cout << "Incorrect Command Line Parameters\n\n";

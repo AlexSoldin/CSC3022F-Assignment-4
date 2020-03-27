@@ -9,8 +9,11 @@
 #include <stdio.h>
 
 #include "Image.cpp"
+#include "Cluster.cpp"
 
 using namespace std;
+
+vector<SLDALE003::Image> images;
 
 /* Method used to execute command line operations and return values. Used to read contents of dataset directory */
 string exec(string command) {
@@ -90,7 +93,8 @@ int main(int argc, char * argv[]){
             double meanInstance = imageInstance.histogramMean(binSize);
             histograms.push_back(imageInstance.getHistogram());
             histogramMeans.push_back(meanInstance);
-        }
+        }      
+
 
         // for(int i = 0; i < histograms.size(); i++){
         //     cout << "Histogram " << i << "\nMean: " << histogramMeans[i] << "\n[ ";

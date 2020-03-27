@@ -14,6 +14,10 @@ using namespace std;
 
 void SLDALE003::Image::loadImage(string fileName){
 
+    size_t pos = fileName.find("/") + 1;
+    imageName = fileName.substr(pos);
+    imageName = imageName.substr(0, imageName.length() - 4); //remove the file extension/type
+
     int rows = 0;
     int columns = 0;
 
@@ -37,13 +41,17 @@ void SLDALE003::Image::loadImage(string fileName){
         
         size = width*height;
         int sizeInput = columns * rows * 3;
-        vector<unsigned char> inputData;
+        // vector<unsigned char> inputData;
 
-        unsigned char instance = 0;
-        while(!inputFile.eof()){
-            inputFile >> instance >> ws; //ignores whitespace and adds each value to int vector
-            inputData.push_back(instance);
-        }
+        unsigned char * inputData = new unsigned char [sizeInput];
+        // vector<unsigned char> inputData;
+
+        inputFile.read((char*)inputData, sizeInput);
+        // unsigned char instance = 0;
+        // while(!inputFile.eof()){
+        //     inputFile >> instance >> ws; //ignores whitespace and adds each value to int vector
+        //     inputData.push_back(instance);
+        // }
 
         inputFile.close();
 
@@ -54,7 +62,7 @@ void SLDALE003::Image::loadImage(string fileName){
             sumCounter += 3;
         }
 
-        // cout << fileName << "\n";
+        cout << imageName << "\n";
         // displayImageGrid(data);
         
     }
@@ -101,10 +109,14 @@ void SLDALE003::Image::generateHistogram(const int binSize){
     cout << "]\n\n";
 }
 
-double SLDALE003::Image::histogramMean(const int binSize){
+vector<int> SLDALE003::Image::getHistogram(){
+    return histogram;
+}
+
+double SLDALE003::Image::histogramMean(int binSize){
     double sum = 0;
-    for(int i=0; i < histogram.size(); i++){
-        sum += histogram[i];
+    for(int i = 0; i < histogram.size(); i++){
+        sum += histogram[i] * (i*binSize);
     }
     double mean = sum / histogram.size();
     cout << "Histogram Mean: " << mean << "\n\n"; 
@@ -139,13 +151,10 @@ void SLDALE003::Image::displayImageGrid(vector<unsigned char>toDisplay){
 }
 
 SLDALE003::Image::Image(){
+    imageName = "";
     height = 0;
     width = 0;
     size = 0;
 }
 
 SLDALE003::Image::~Image(){}
-
-vector<int> SLDALE003::Image::getHistogram(){
-    return histogram;
-}

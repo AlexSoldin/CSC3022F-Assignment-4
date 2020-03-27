@@ -13,6 +13,7 @@
 namespace SLDALE003{
     class Image{
         private:
+            std::string imageName;
             int width;
             int height;
             int size;

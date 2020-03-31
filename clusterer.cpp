@@ -19,7 +19,7 @@ vector<vector <int>> histograms;
 vector<double> histogramMeans;
 
 vector<vector<int>> clusters;
-vector<int> classification;
+vector<vector<int>> classification;
 
 /* Method used to execute command line operations and return values. Used to read contents of dataset directory */
 string exec(string command) {
@@ -44,7 +44,9 @@ string exec(string command) {
 }
 
 void createClusters(const int numClusters){
-    for(int i=0; i<numClusters; i++){
+    vector<int> temp = {};
+    for(int i=0; i < numClusters; i++){
+        classification.push_back(temp);
         vector<int> randomHist;
         int r = (rand() % 100) + 0;
         randomHist = histograms[r];
@@ -53,7 +55,34 @@ void createClusters(const int numClusters){
 }
 
 void populateClusters(){
-    
+    int clusterID = 0;
+    double minDistance = 0;
+    double distance = 0;
+    int clusterToAssign = 0;
+    int clusterIndex = 0; //index of histogram image
+
+    for(auto histogram : histograms){
+        clusterID = 0;
+        minDistance = 0;
+        
+        for(auto cluster : clusters){
+            distance = 0;
+            for(int i=0; i < histogram.size(); i++){
+                double value = cluster[i] - histogram[i];
+                distance += pow(value, 2);
+            }
+            clusterID++;
+            
+            if(distance < minDistance){
+                cout << distance << " ------ " << endl;
+                minDistance = distance;
+                clusterToAssign = clusterID++;;
+                cout << clusterToAssign << " -------- " << endl;
+            }
+        }
+        classification[clusterToAssign].push_back(clusterIndex);
+        clusterIndex++;
+    }
 }
 
 /* Main Method */
@@ -107,6 +136,7 @@ int main(int argc, char * argv[]){
             SLDALE003::Image imageInstance;
             imageInstance.loadImage(dataset+"/"+datasetFiles[i]);
             imageInstance.generateHistogram(binSize);
+            images.push_back(imageInstance);
             double meanInstance = imageInstance.histogramMean(binSize);
             histograms.push_back(imageInstance.getHistogram());
             histogramMeans.push_back(meanInstance);
@@ -121,20 +151,25 @@ int main(int argc, char * argv[]){
         // }
 
         createClusters(numberOfClusters);
+        populateClusters();
 
-        cout << clusters.size() << endl;
-        for(int i = 0; i < clusters.size(); i++){
-            // cout << "Histogram " << i << "\nMean: " << histogramMeans[i] << "\n[ ";
-            for(int j =0; j < clusters[i].size(); j++){
-                cout << clusters[i][j] << " ";
+        for(int i = 0; i < classification.size(); i++){
+            cout << "Cluster " << (i+1) << ": ";
+            for(int j =0; j < classification[i].size(); j++){
+                if(j <= classification[i].size() - 2)
+                    cout << images[classification[i][j]].getImageName() << ", ";
+                else
+                    cout << images[classification[i][j]].getImageName() << " ";
             }
-            cout << "]\n\n";
+            cout << "\n";
         }
+
+
 
     }
     else{
         cout << "Incorrect Command Line Parameters\n\n";
     }
-    
+
     return 0;
 }

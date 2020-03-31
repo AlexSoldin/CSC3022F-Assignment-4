@@ -123,17 +123,27 @@ double SLDALE003::Image::histogramMean(int binSize){
     return mean;
 }
 
-/* Squared Euclidean Distance */
+/* Squared Euclidean Distance for an Image */
 double SLDALE003::Image::getDistance(Image &other){
     double squareDistance = 0;
     for(int i = 0; i < histogram.size(); i++){
-        int value = histogram[i] - other.histogram[i];
+        int value = other.histogram[i] - histogram[i];
         squareDistance += pow(value, 2);
     }
     return squareDistance;
 }
 
-void SLDALE003::Image::displayImageGrid(vector<unsigned char>toDisplay){
+/* Squared Euclidean Distance for a Vector */
+double SLDALE003::Image::getDistance(vector<int> &other){
+    double squareDistance = 0;
+    for(int i = 0; i < histogram.size(); i++){
+        int value = other[i] - histogram[i];
+        squareDistance += pow(value, 2);
+    }
+    return squareDistance;
+}
+
+void SLDALE003::Image::displayImageGrid(vector<unsigned char> toDisplay){
     // When colour conversion is implemented, can see the PPM image
     for(int i=0; i<height; i++){
         for(int j=0; j<width; j++){
@@ -158,3 +168,7 @@ SLDALE003::Image::Image(){
 }
 
 SLDALE003::Image::~Image(){}
+
+string SLDALE003::Image::getImageName(){
+    return imageName;
+}

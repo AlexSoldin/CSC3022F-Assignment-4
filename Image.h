@@ -25,11 +25,13 @@ namespace SLDALE003{
             ~Image();
 
             std::vector<int> getHistogram();
+            std::string getImageName();
 
             void loadImage(std::string fileName);
             void generateHistogram(const int binSize);
             double histogramMean(const int binSize);
             double getDistance(Image &other);
+            double getDistance(std::vector<int> &other);
             void displayImageGrid(std::vector<unsigned char> toDisplay);
     };
 }

@@ -14,6 +14,8 @@
 using namespace std;
 
 vector<SLDALE003::Image> images;
+vector<vector <int>> histograms;
+vector<double> histogramMeans;
 
 /* Method used to execute command line operations and return values. Used to read contents of dataset directory */
 string exec(string command) {
@@ -37,6 +39,7 @@ string exec(string command) {
    return fileContents;
 }
 
+/* Main Method */
 int main(int argc, char * argv[]){
     string dataset = argv[1];
     vector<string> datasetFiles;
@@ -50,9 +53,6 @@ int main(int argc, char * argv[]){
     string outputFileName = "Default";
     int numberOfClusters = 10;
     int binSize = 1;
-
-    vector<vector <int>> histograms;
-    vector<double> histogramMeans;
 
     if(argc > 2){
         for(int i = 2; i < argc; i++){

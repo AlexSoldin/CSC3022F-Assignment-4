@@ -10,7 +10,6 @@
 #include <cmath>
 
 #include "Image.cpp"
-#include "Cluster.cpp"
 
 using namespace std;
 
@@ -48,40 +47,39 @@ void createClusters(const int numClusters){
     for(int i=0; i < numClusters; i++){
         classification.push_back(temp);
         vector<int> randomHist;
-        int r = (rand() % 100) + 0;
+        int r = (rand() % 100);
         randomHist = histograms[r];
         clusters.push_back(randomHist);
     }
 }
 
 void populateClusters(){
-    int clusterID = 0;
-    double minDistance = 0;
+    double minDistance = 1000000;
     double distance = 0;
-    int clusterToAssign = 0;
-    int clusterIndex = 0; //index of histogram image
+    int clusterNumber = 0; //cluster number index for iteration
+    int clusterToAssign = 0; //index of the cluster that the image is being assigned to
+    int imageIndex = 0; //index of histogram image to be clustered
 
     for(auto histogram : histograms){
-        clusterID = 0;
-        minDistance = 0;
+        clusterNumber = 0;
+        minDistance = 1000000;
         
         for(auto cluster : clusters){
             distance = 0;
+
             for(int i=0; i < histogram.size(); i++){
                 double value = cluster[i] - histogram[i];
                 distance += pow(value, 2);
             }
-            clusterID++;
+            clusterNumber++;
             
             if(distance < minDistance){
-                cout << distance << " ------ " << endl;
                 minDistance = distance;
-                clusterToAssign = clusterID++;;
-                cout << clusterToAssign << " -------- " << endl;
+                clusterToAssign = clusterNumber;
             }
         }
-        classification[clusterToAssign].push_back(clusterIndex);
-        clusterIndex++;
+        classification[clusterToAssign].push_back(imageIndex);
+        imageIndex++;
     }
 }
 

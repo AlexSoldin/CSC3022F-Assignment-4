@@ -7,6 +7,7 @@
 #include <ios>
 #include <stdexcept>
 #include <stdio.h>
+#include <cmath>
 
 #include "Image.cpp"
 #include "Cluster.cpp"
@@ -16,6 +17,9 @@ using namespace std;
 vector<SLDALE003::Image> images;
 vector<vector <int>> histograms;
 vector<double> histogramMeans;
+
+vector<vector<int>> clusters;
+vector<int> classification;
 
 /* Method used to execute command line operations and return values. Used to read contents of dataset directory */
 string exec(string command) {
@@ -37,6 +41,19 @@ string exec(string command) {
 
    pclose(pipe);
    return fileContents;
+}
+
+void createClusters(const int numClusters){
+    for(int i=0; i<numClusters; i++){
+        vector<int> randomHist;
+        int r = (rand() % 100) + 0;
+        randomHist = histograms[r];
+        clusters.push_back(randomHist);
+    }
+}
+
+void populateClusters(){
+    
 }
 
 /* Main Method */
@@ -93,8 +110,7 @@ int main(int argc, char * argv[]){
             double meanInstance = imageInstance.histogramMean(binSize);
             histograms.push_back(imageInstance.getHistogram());
             histogramMeans.push_back(meanInstance);
-        }      
-
+        } 
 
         // for(int i = 0; i < histograms.size(); i++){
         //     cout << "Histogram " << i << "\nMean: " << histogramMeans[i] << "\n[ ";
@@ -103,6 +119,18 @@ int main(int argc, char * argv[]){
         //     }
         //     cout << "]\n\n";
         // }
+
+        createClusters(numberOfClusters);
+
+        cout << clusters.size() << endl;
+        for(int i = 0; i < clusters.size(); i++){
+            // cout << "Histogram " << i << "\nMean: " << histogramMeans[i] << "\n[ ";
+            for(int j =0; j < clusters[i].size(); j++){
+                cout << clusters[i][j] << " ";
+            }
+            cout << "]\n\n";
+        }
+
     }
     else{
         cout << "Incorrect Command Line Parameters\n\n";

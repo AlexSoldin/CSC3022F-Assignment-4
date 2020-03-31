@@ -9,6 +9,6 @@ clean:
 
 #	./clusterer <dataset> [-o output] [-k n] [-bin b]
 run: clusterer
-	./clusterer Gradient_Numbers_PPMS -o output -k 20 -bin 1
+	./clusterer Gradient_Numbers_PPMS -o output -k 10 -bin 1
 #	./clusterer Gradient_Numbers_PPMS -k 20 -bin 2
 #	./clusterer Gradient_Numbers_PPMS -bin 2

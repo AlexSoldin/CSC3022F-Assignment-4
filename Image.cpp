@@ -62,7 +62,7 @@ void SLDALE003::Image::loadImage(string fileName){
             sumCounter += 3;
         }
 
-        cout << imageName << "\n";
+        // cout << imageName << "\n";
         // displayImageGrid(data);
         
     }
@@ -102,11 +102,11 @@ void SLDALE003::Image::generateHistogram(const int binSize){
     }
 
     /* Display Histogram */ 
-    cout << "Length of Histogram: " << histogramLength << "\nHistogram Data: [ ";
-    for(int i = 0; i < histogram.size(); i++){
-        cout << histogram[i] << " ";
-    }
-    cout << "]\n\n";
+    // cout << "Length of Histogram: " << histogramLength << "\nHistogram Data: [ ";
+    // for(int i = 0; i < histogram.size(); i++){
+    //     cout << histogram[i] << " ";
+    // }
+    // cout << "]\n\n";
 }
 
 vector<int> SLDALE003::Image::getHistogram(){
@@ -119,7 +119,7 @@ double SLDALE003::Image::histogramMean(int binSize){
         sum += histogram[i] * (i*binSize);
     }
     double mean = sum / histogram.size();
-    cout << "Histogram Mean: " << mean << "\n\n"; 
+    // cout << "Histogram Mean: " << mean << "\n\n"; 
     return mean;
 }
 

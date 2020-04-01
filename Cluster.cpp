@@ -28,7 +28,7 @@ string SLDALE003::Cluster::getClassification(){
 }
 
 ostream& operator<<(ostream& os, SLDALE003::Cluster& c){
-    os << c.stringClassification[0];
+    os << "cluster " << c.stringClassification[0] << ": ";
     for(int i=1; i < c.stringClassification.size(); i++){
         if(i < c.stringClassification.size() - 1)
             os << c.stringClassification[i] << ", ";

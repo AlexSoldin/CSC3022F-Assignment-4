@@ -136,12 +136,14 @@ int main(int argc, char * argv[]){
     string outputArg = "-o";
     string clusterArg = "-k";
     string widthArg = "-bin";
+    string colourArg = "-colour";
 
     string outputPath = "./Output/";
     /* Default Values */
     string outputFileName = "Default";
     int numberOfClusters = 10;
     int binSize = 1;
+    bool colour = false;
 
     if(argc > 2){
         for(int i = 2; i < argc; i++){
@@ -156,6 +158,9 @@ int main(int argc, char * argv[]){
             }
             if(current.compare(widthArg) == 0){
                 binSize = stoi(argv[i+1]);
+            }
+            if(current.compare(colourArg)){
+                colour = true;
             }
         }
 
@@ -177,7 +182,7 @@ int main(int argc, char * argv[]){
     
         for(int i = 0; i < datasetFiles.size(); i++){
             SLDALE003::Image imageInstance;
-            imageInstance.loadImage(dataset+"/"+datasetFiles[i]);
+            imageInstance.loadImage(dataset+"/"+datasetFiles[i], colour);
             imageInstance.generateHistogram(binSize);
             images.push_back(imageInstance);
             double meanInstance = imageInstance.histogramMean(binSize);
@@ -204,7 +209,7 @@ int main(int argc, char * argv[]){
 
         /* Populate stringClassification Vector for Output */
         for(int i=0; i < clusters.size(); i++){
-            clusters[i].stringClassification.push_back("cluster " + to_string(i) + ": ");
+            clusters[i].stringClassification.push_back(to_string(i));
             for(int j=0; j < clusters[i].classification.size(); j++){
                 clusters[i].stringClassification.push_back(images[clusters[i].classification[j]].getImageName());
             }

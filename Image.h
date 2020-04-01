@@ -17,6 +17,7 @@ namespace SLDALE003{
             int width;
             int height;
             int size;
+            int colourSize;
             std::vector<unsigned char> data;
             std::vector<int> histogram;
 
@@ -27,7 +28,7 @@ namespace SLDALE003{
             std::vector<int> getHistogram();
             std::string getImageName();
 
-            void loadImage(std::string fileName);
+            void loadImage(std::string fileName, bool colour);
             void generateHistogram(const int binSize);
             double histogramMean(const int binSize);
             double getDistance(Image &other);

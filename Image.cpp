@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void SLDALE003::Image::loadImage(string fileName){
+void SLDALE003::Image::loadImage(string fileName, bool colour){
 
     size_t pos = fileName.find("/") + 1;
     imageName = fileName.substr(pos);
@@ -40,31 +40,29 @@ void SLDALE003::Image::loadImage(string fileName){
         // cout << "\nWidth: " << width << "\nHeight: " << height << "\nMax Value: " << maxValue << "\n\n";
         
         size = width*height;
-        int sizeInput = columns * rows * 3;
-        // vector<unsigned char> inputData;
+        colourSize = columns * rows * 3;
 
-        unsigned char * inputData = new unsigned char [sizeInput];
-        // vector<unsigned char> inputData;
-
-        inputFile.read((char*)inputData, sizeInput);
-        // unsigned char instance = 0;
-        // while(!inputFile.eof()){
-        //     inputFile >> instance >> ws; //ignores whitespace and adds each value to int vector
-        //     inputData.push_back(instance);
-        // }
-
+        unsigned char * inputData = new unsigned char [colourSize];
+        inputFile.read((char*)inputData, colourSize);
         inputFile.close();
 
+        if(colour){
+            /* Populate Colour Data Vector */
+            for(int i=0; i < colourSize; i++){
+                data.push_back(inputData[i]);
+            }
+        }
+        else{
         /* Colour Conversion Equation Implementation */
-        int sumCounter = 0;
-        while(sumCounter < (sizeInput-2)){
-            data.push_back(0.21*inputData[sumCounter] + 0.72*inputData[sumCounter+1] + 0.07*inputData[sumCounter+2]);
-            sumCounter += 3;
+            int sumCounter = 0;
+            while(sumCounter < (colourSize-2)){
+                data.push_back(0.21*inputData[sumCounter] + 0.72*inputData[sumCounter+1] + 0.07*inputData[sumCounter+2]);
+                sumCounter += 3;
+            }
         }
 
         // cout << imageName << "\n";
-        // displayImageGrid(data);
-        
+        // displayImageGrid(data); //view greyscale images
     }
     else{
         cout << "File Not Found\n\n";

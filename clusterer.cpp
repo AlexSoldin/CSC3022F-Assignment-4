@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <stdio.h>
 #include <cmath>
+#include <time.h> 
 
 #include "Image.cpp"
 #include "Cluster.cpp"
@@ -20,7 +21,7 @@ vector<double> histogramMeans;
 
 vector<SLDALE003::Cluster> clusters;
 
-/* Method used to execute command line operations and return values. Used to read contents of dataset directory */
+/* Used to execute command line operations and return values. Used to read contents of dataset directory */
 string exec(string command) {
    char buffer[128];
    string fileContents = "";
@@ -42,7 +43,9 @@ string exec(string command) {
    return fileContents;
 }
 
+/* Create Initial Clusters from Random Subset of Histograms */
 void createClusters(const int numClusters){
+    srand(time(0)); //using time to set the random seed
     for(int i=0; i < numClusters; i++){
         SLDALE003::Cluster clusterInstance;
         vector<int> randomHist;
@@ -53,6 +56,7 @@ void createClusters(const int numClusters){
     }
 }
 
+/* Populate Each Cluster with Closest Image Number */
 void populateClusters(){
     double minDistance = 1000000;
     double distance = 0;
@@ -87,6 +91,7 @@ void populateClusters(){
     }
 }
 
+/* Calculate the Centroid of a Cluster */
 vector<int> calculateCentroid(SLDALE003::Cluster &c){
     vector<int> newCentroid(c.centroid.size(), 0);
     for(int imageNumber : c.classification){
@@ -95,11 +100,32 @@ vector<int> calculateCentroid(SLDALE003::Cluster &c){
         }
     }
 
-    for(int i=0; i < c.centroid.size(); i++){
-        newCentroid[i] = newCentroid[i]/c.classification.size();
+    if(c.classification.size()!=0){
+        for(int i=0; i < c.centroid.size(); i++){
+            newCentroid[i] = newCentroid[i]/c.classification.size();
+        }
     }
 
     return newCentroid;
+}
+
+/* Generate Output to File or Console */
+void generateOutput(const string outputFileName){
+    /* No Output File Required */
+    if(outputFileName.compare("Default")==0){
+        for (int i = 0; i < clusters.size(); i++) {
+            cout << clusters[i] << endl;
+        }
+    }
+    /* Output File Required */
+    else{
+        ofstream outputFile;
+        outputFile.open("./Output/"+outputFileName+".txt");
+        for (int i = 0; i < clusters.size(); i++) {
+            outputFile << clusters[i] << endl;
+        }
+        outputFile.close();
+    }
 }
 
 /* Main Method */
@@ -160,41 +186,31 @@ int main(int argc, char * argv[]){
         }
 
         createClusters(numberOfClusters);
-        populateClusters();
 
         bool converge;
-        int iteration = 1;
-
         do {
             converge = true;
             populateClusters();
-            cout << "Iteration " << iteration << endl;
-            // outFile << "Iteration " << iteration << endl;
-
+        
             for (int c = 0; c < numberOfClusters; c++) {
-                
                 vector<int> centroid = calculateCentroid(clusters[c]);
                 if (centroid != clusters[c].centroid) {
                     converge = false;
                     clusters[c].centroid = centroid;
                 }
-                cout << "Cluster " << (c + 1) << ": " << clusters[c] << endl;
-                // outFile << "Cluster " << (c + 1) << ": " << clusters[c].getPoints() << endl;
-                // outFile << "Centroid " << clusters[c].centroid << endl;
+    
             }
-            ++iteration;
-            cout << "\n\n";
         } while (!converge);
 
-        for(int i=0; i<clusters.size(); i++){
-            cout << "Cluster " << i << ": ";
+        /* Populate stringClassification Vector for Output */
+        for(int i=0; i < clusters.size(); i++){
+            clusters[i].stringClassification.push_back("cluster " + to_string(i) + ": ");
             for(int j=0; j < clusters[i].classification.size(); j++){
-                if(j <= clusters[i].classification.size() - 2)
-                    cout << images[clusters[i].classification[j]].getImageName() << ", ";
-                else
-                    cout << images[clusters[i].classification[j]].getImageName() << "\n";
+                clusters[i].stringClassification.push_back(images[clusters[i].classification[j]].getImageName());
             }
         }
+
+        generateOutput(outputFileName);
 
     }
     else{

@@ -17,8 +17,9 @@ namespace SLDALE003{
         public:
             std::vector<int> centroid;
             std::vector<int> classification;
+            std::vector<std::string> stringClassification;
 
-            Cluster(const std::vector<int> &centroid, const std::vector<int> &classification);
+            Cluster(const std::vector<int> &centroid, const std::vector<int> &classification, const std::vector<std::string> &stringClassification);
             Cluster(const std::vector<int> &centroid);
             Cluster();
 

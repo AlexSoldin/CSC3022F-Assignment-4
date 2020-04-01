@@ -12,7 +12,7 @@
 
 using namespace std;
 
-SLDALE003::Cluster::Cluster(const vector<int> &centroid, const vector<int> &classification) : centroid(centroid), classification(classification) {}
+SLDALE003::Cluster::Cluster(const vector<int> &centroid, const vector<int> &classification, const vector<string> &stringClassification) : centroid(centroid), classification(classification), stringClassification(stringClassification) {}
 
 SLDALE003::Cluster::Cluster(const vector<int> &centroid) : centroid(centroid) {}
 
@@ -28,11 +28,12 @@ string SLDALE003::Cluster::getClassification(){
 }
 
 ostream& operator<<(ostream& os, SLDALE003::Cluster& c){
-    for(int i=0; i < c.classification.size(); i++){
-        if(i <= c.classification.size() - 2)
-            os << to_string(c.classification[i]) << ", ";
+    os << c.stringClassification[0];
+    for(int i=1; i < c.stringClassification.size(); i++){
+        if(i < c.stringClassification.size() - 1)
+            os << c.stringClassification[i] << ", ";
         else
-            os << to_string(c.classification[i]);
+            os << c.stringClassification[i];
     }
     return os;
 }

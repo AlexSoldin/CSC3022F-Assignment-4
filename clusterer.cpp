@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include "Image.cpp"
+#include "Cluster.cpp"
 
 using namespace std;
 
@@ -17,8 +18,7 @@ vector<SLDALE003::Image> images;
 vector<vector <int>> histograms;
 vector<double> histogramMeans;
 
-vector<vector<int>> clusters;
-vector<vector<int>> classification;
+vector<SLDALE003::Cluster> clusters;
 
 /* Method used to execute command line operations and return values. Used to read contents of dataset directory */
 string exec(string command) {
@@ -43,13 +43,13 @@ string exec(string command) {
 }
 
 void createClusters(const int numClusters){
-    vector<int> temp = {};
     for(int i=0; i < numClusters; i++){
-        classification.push_back(temp);
+        SLDALE003::Cluster clusterInstance;
         vector<int> randomHist;
         int r = (rand() % 100);
         randomHist = histograms[r];
-        clusters.push_back(randomHist);
+        clusterInstance.centroid = {randomHist};
+        clusters.push_back(clusterInstance);
     }
 }
 
@@ -60,27 +60,46 @@ void populateClusters(){
     int clusterToAssign = 0; //index of the cluster that the image is being assigned to
     int imageIndex = 0; //index of histogram image to be clustered
 
+    for (int i = 0; i < clusters.size(); i++) {
+        clusters[i].classification.clear();
+    }
+
     for(auto histogram : histograms){
-        clusterNumber = 0;
         minDistance = 1000000;
+        clusterNumber = 0;
         
         for(auto cluster : clusters){
             distance = 0;
 
             for(int i=0; i < histogram.size(); i++){
-                double value = cluster[i] - histogram[i];
+                double value = cluster.centroid[i] - histogram[i];
                 distance += pow(value, 2);
             }
-            clusterNumber++;
             
             if(distance < minDistance){
                 minDistance = distance;
                 clusterToAssign = clusterNumber;
             }
+            clusterNumber++;
         }
-        classification[clusterToAssign].push_back(imageIndex);
+        clusters[clusterToAssign].classification.push_back(imageIndex);
         imageIndex++;
     }
+}
+
+vector<int> calculateCentroid(SLDALE003::Cluster &c){
+    vector<int> newCentroid(c.centroid.size(), 0);
+    for(int imageNumber : c.classification){
+        for(int j=0; j < histograms[imageNumber].size(); j++){
+            newCentroid[j] += histograms[imageNumber][j];
+        }
+    }
+
+    for(int i=0; i < c.centroid.size(); i++){
+        newCentroid[i] = newCentroid[i]/c.classification.size();
+    }
+
+    return newCentroid;
 }
 
 /* Main Method */
@@ -138,31 +157,44 @@ int main(int argc, char * argv[]){
             double meanInstance = imageInstance.histogramMean(binSize);
             histograms.push_back(imageInstance.getHistogram());
             histogramMeans.push_back(meanInstance);
-        } 
-
-        // for(int i = 0; i < histograms.size(); i++){
-        //     cout << "Histogram " << i << "\nMean: " << histogramMeans[i] << "\n[ ";
-        //     for(int j =0; j < histograms[i].size(); j++){
-        //         cout << histograms[i][j] << " ";
-        //     }
-        //     cout << "]\n\n";
-        // }
+        }
 
         createClusters(numberOfClusters);
         populateClusters();
 
-        for(int i = 0; i < classification.size(); i++){
-            cout << "Cluster " << (i+1) << ": ";
-            for(int j =0; j < classification[i].size(); j++){
-                if(j <= classification[i].size() - 2)
-                    cout << images[classification[i][j]].getImageName() << ", ";
-                else
-                    cout << images[classification[i][j]].getImageName() << " ";
+        bool converge;
+        int iteration = 1;
+
+        do {
+            converge = true;
+            populateClusters();
+            cout << "Iteration " << iteration << endl;
+            // outFile << "Iteration " << iteration << endl;
+
+            for (int c = 0; c < numberOfClusters; c++) {
+                
+                vector<int> centroid = calculateCentroid(clusters[c]);
+                if (centroid != clusters[c].centroid) {
+                    converge = false;
+                    clusters[c].centroid = centroid;
+                }
+                cout << "Cluster " << (c + 1) << ": " << clusters[c] << endl;
+                // outFile << "Cluster " << (c + 1) << ": " << clusters[c].getPoints() << endl;
+                // outFile << "Centroid " << clusters[c].centroid << endl;
             }
-            cout << "\n";
+            ++iteration;
+            cout << "\n\n";
+        } while (!converge);
+
+        for(int i=0; i<clusters.size(); i++){
+            cout << "Cluster " << i << ": ";
+            for(int j=0; j < clusters[i].classification.size(); j++){
+                if(j <= clusters[i].classification.size() - 2)
+                    cout << images[clusters[i].classification[j]].getImageName() << ", ";
+                else
+                    cout << images[clusters[i].classification[j]].getImageName() << "\n";
+            }
         }
-
-
 
     }
     else{

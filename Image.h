@@ -31,8 +31,6 @@ namespace SLDALE003{
             void loadImage(std::string fileName, bool colour);
             void generateHistogram(const int binSize);
             double histogramMean(const int binSize);
-            double getDistance(Image &other);
-            double getDistance(std::vector<int> &other);
             void displayImageGrid(std::vector<unsigned char> toDisplay);
     };
 }

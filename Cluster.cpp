@@ -27,8 +27,9 @@ string SLDALE003::Cluster::getClassification(){
     return output;
 }
 
+/* Overload operator<< to Display Images Contained in Cluster */
 ostream& operator<<(ostream& os, SLDALE003::Cluster& c){
-    os << "cluster " << c.stringClassification[0] << ": ";
+    os << "cluster " << c.stringClassification[0] << ": "; //first instance is the cluster ID
     for(int i=1; i < c.stringClassification.size(); i++){
         if(i < c.stringClassification.size() - 1)
             os << c.stringClassification[i] << ", ";

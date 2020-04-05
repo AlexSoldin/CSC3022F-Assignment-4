@@ -56,6 +56,12 @@ void SLDALE003::Image::loadImage(string fileName, bool colour){
         /* Colour Conversion Equation Implementation */
             int sumCounter = 0;
             while(sumCounter < (colourSize-2)){
+                /* Possible Threshold Implementation */
+                // int value = 0.21*inputData[sumCounter] + 0.72*inputData[sumCounter+1] + 0.07*inputData[sumCounter+2];
+                // if(value > 150)
+                //     data.push_back(value);
+                // else
+                //     data.push_back(0);
                 data.push_back(0.21*inputData[sumCounter] + 0.72*inputData[sumCounter+1] + 0.07*inputData[sumCounter+2]);
                 sumCounter += 3;
             }
@@ -119,26 +125,6 @@ double SLDALE003::Image::histogramMean(int binSize){
     double mean = sum / histogram.size();
     // cout << "Histogram Mean: " << mean << "\n\n"; 
     return mean;
-}
-
-/* Squared Euclidean Distance for an Image */
-double SLDALE003::Image::getDistance(Image &other){
-    double squareDistance = 0;
-    for(int i = 0; i < histogram.size(); i++){
-        int value = other.histogram[i] - histogram[i];
-        squareDistance += pow(value, 2);
-    }
-    return squareDistance;
-}
-
-/* Squared Euclidean Distance for a Vector */
-double SLDALE003::Image::getDistance(vector<int> &other){
-    double squareDistance = 0;
-    for(int i = 0; i < histogram.size(); i++){
-        int value = other[i] - histogram[i];
-        squareDistance += pow(value, 2);
-    }
-    return squareDistance;
 }
 
 void SLDALE003::Image::displayImageGrid(vector<unsigned char> toDisplay){

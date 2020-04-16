@@ -77,9 +77,8 @@ I did explore using additional feautures to classify the images such as applying
 ## Makefile
 The Makefile compiles and links all necessary files into the clusterer executable. 
 
-The input is of the form: ./clusterer [ dataset] [ -o output file base name] [ -k number of clusters] [ -bin bin width] [ -colour] [- INSERT]
+The input is of the form: ./clusterer [ dataset] [ -o output file base name] [ -k number of clusters] [ -bin bin width] [ -colour]
 * -colour argument instructs the program to utilise the RGB values images instead of converting them to greyscale
-* INSERT argument instructs the program to generate a different feature as described in the Additional Feature Section above
 
 Some examples have been commented out in the Makfile. The main commands include:
 * make - compiles files

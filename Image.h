@@ -28,10 +28,10 @@ namespace SLDALE003{
             std::vector<int> getHistogram();
             std::string getImageName();
 
-            void loadImage(std::string fileName, bool colour);
+            void loadImage(std::string fileName, const bool colour);
             void generateHistogram(const int binSize);
             double histogramMean(const int binSize);
-            void displayImageGrid(std::vector<unsigned char> toDisplay);
+            void displayImageGrid(const std::vector<unsigned char> toDisplay);
     };
 }
 

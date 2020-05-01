@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void SLDALE003::Image::loadImage(string fileName, bool colour){
+void SLDALE003::Image::loadImage(string fileName, const bool colour){
 
     size_t pos = fileName.find("/") + 1;
     imageName = fileName.substr(pos);
@@ -22,17 +22,24 @@ void SLDALE003::Image::loadImage(string fileName, bool colour){
     int columns = 0;
 
     ifstream inputFile(fileName, ios::binary);
-    std::stringstream ss;
-    string line = "";
+    string line;
+    string comment;
+    string dimensions;
+    string maxValue;
 
     if(inputFile){
         getline(inputFile, line);
 
-        ss << inputFile.rdbuf();
-        ss >> columns >> rows;
-
-        int maxValue;
-        ss >> maxValue;
+        getline(inputFile, comment);
+        while(comment.at(0)=='#'){
+            getline(inputFile, comment);
+        }
+        dimensions = comment;
+        
+        getline(inputFile, maxValue);
+        
+        std::stringstream(dimensions) >> columns >> std::ws;
+        std::stringstream(dimensions) >> rows >> std::ws;
 
         width = columns;
         height = rows;
@@ -67,8 +74,10 @@ void SLDALE003::Image::loadImage(string fileName, bool colour){
             }
         }
 
+        // View greyscale images
         // cout << imageName << "\n";
-        // displayImageGrid(data); //view greyscale images
+        // displayImageGrid(data); 
+        
     }
     else{
         cout << "File Not Found\n\n";
@@ -127,8 +136,8 @@ double SLDALE003::Image::histogramMean(int binSize){
     return mean;
 }
 
-void SLDALE003::Image::displayImageGrid(vector<unsigned char> toDisplay){
-    // When colour conversion is implemented, can see the PPM image
+void SLDALE003::Image::displayImageGrid(const vector<unsigned char> toDisplay){
+    // When colour conversion is implemented, you can see the PPM image
     for(int i=0; i<height; i++){
         for(int j=0; j<width; j++){
             string out = to_string(toDisplay[i*height + j]);

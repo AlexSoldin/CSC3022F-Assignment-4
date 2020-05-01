@@ -159,7 +159,7 @@ int main(int argc, char * argv[]){
             if(current.compare(widthArg) == 0){
                 binSize = stoi(argv[i+1]);
             }
-            if(current.compare(colourArg)){
+            if(current.compare(colourArg) == 0){
                 colour = true;
             }
         }
@@ -170,6 +170,7 @@ int main(int argc, char * argv[]){
         << "\nOutput File Name:\t" << outputFileName 
         << "\nNumber Of Clusters:\t" << numberOfClusters 
         << "\nBin Width:\t\t" << binSize 
+        << "\nColour:\t\t\t" << colour 
         << "\n-----------------------------------------------\n\n";
 
         /* Populate datasetFiles with all file names contained in the dataset directory */

@@ -61,9 +61,10 @@ This class holds all the data pertaining to an individual image. This includes r
     vector<int> getHistogram();
     string getImageName();
 
-    void loadImage(string fileName, bool colour);
+    void loadImage(string fileName, const bool colour, const bool threshold);
+    vector<int> thresholdImage();
     void generateHistogram(const int binSize);
-    double histogramMean(const int binSize);
+    double dataMean();
     void displayImageGrid(vector<unsigned char> toDisplay);
 ```
 
@@ -71,14 +72,22 @@ This class holds all the data pertaining to an individual image. This includes r
 This class contains all the method calls held in Image.cpp.
 
 ## Additional Feature
-I did explore using additional feautures to classify the images such as applying filters to the images or using techniques such as thresholding and masking. However, I did not beleive that any of the explored techniques yielded greater performance when clustering the images.
+I did explore using additional feautures to classify the images such as applying filters to the images or using techniques such as thresholding and masking. I decided to implement thresholding which is a simple method of creating a binary image. The process of thresholding a particular image included:
+* Converting the RGB image into a greyscale format
+* Computing the mean of this image data to determine an appropriate threshold
+* Iterating through the data assigning either 0 or 255 to each element depending on its value compared to the threshold
 
+This method yields greater accuracy as the image is now separated into a foreground and background. This allows the images to be clustered according to their shape without considering partial pixel values that may have affected accuracy (like the histogram feauture).
+
+Source: https://en.wikipedia.org/wiki/Thresholding_(image_processing)
 
 ## Makefile
 The Makefile compiles and links all necessary files into the clusterer executable. 
 
-The input is of the form: ./clusterer [ dataset] [ -o output file base name] [ -k number of clusters] [ -bin bin width] [ -colour]
+The input is of the form: ./clusterer [ dataset] [ -o output file base name] [ -k number of clusters] [ -bin bin width] [ -colour] [ -threshold]
 * -colour argument instructs the program to utilise the RGB values images instead of converting them to greyscale
+* -threshold arguement instructs the program to cluster the images according to their binary values
+    * Does not work with -colour flag as a greyscale image is required
 
 Some examples have been commented out in the Makfile. The main commands include:
 * make - compiles files

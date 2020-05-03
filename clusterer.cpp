@@ -17,7 +17,6 @@ using namespace std;
 
 vector<SLDALE003::Image> images;
 vector<vector <int>> histograms;
-vector<double> histogramMeans;
 
 vector<SLDALE003::Cluster> clusters;
 
@@ -50,6 +49,7 @@ void createClusters(const int numClusters){
         SLDALE003::Cluster clusterInstance;
         vector<int> randomHist;
         int r = (rand() % 100);
+        // cout << "cluster " << i << ": " << r << endl; //view which samples were chosen as original clusters
         randomHist = histograms[r];
         clusterInstance.centroid = {randomHist};
         clusters.push_back(clusterInstance);
@@ -80,6 +80,8 @@ void populateClusters(){
                 distance += pow(value, 2);
             }
             
+            distance = sqrt(distance);
+
             if(distance < minDistance){
                 minDistance = distance;
                 clusterToAssign = clusterNumber;
@@ -137,6 +139,7 @@ int main(int argc, char * argv[]){
     string clusterArg = "-k";
     string widthArg = "-bin";
     string colourArg = "-colour";
+    string additionalArg = "-threshold";
 
     string outputPath = "./Output/";
     /* Default Values */
@@ -144,6 +147,7 @@ int main(int argc, char * argv[]){
     int numberOfClusters = 10;
     int binSize = 1;
     bool colour = false;
+    bool threshold = false;
 
     if(argc > 2){
         for(int i = 2; i < argc; i++){
@@ -162,6 +166,9 @@ int main(int argc, char * argv[]){
             if(current.compare(colourArg) == 0){
                 colour = true;
             }
+            if(current.compare(additionalArg) == 0){
+                threshold = true;
+            }
         }
 
         cout << "\nCheck Command Line Parameters"
@@ -171,6 +178,7 @@ int main(int argc, char * argv[]){
         << "\nNumber Of Clusters:\t" << numberOfClusters 
         << "\nBin Width:\t\t" << binSize 
         << "\nColour:\t\t\t" << colour 
+        << "\nThreshold:\t\t" << threshold 
         << "\n-----------------------------------------------\n\n";
 
         /* Populate datasetFiles with all file names contained in the dataset directory */
@@ -182,13 +190,25 @@ int main(int argc, char * argv[]){
         // copy(datasetFiles.begin(), datasetFiles.end(), ostream_iterator<string>(cout, "\n")); //not returned in order
     
         for(int i = 0; i < datasetFiles.size(); i++){
-            SLDALE003::Image imageInstance;
-            imageInstance.loadImage(dataset+"/"+datasetFiles[i], colour);
-            imageInstance.generateHistogram(binSize);
+            SLDALE003::Image imageInstance; //create image instance
+            imageInstance.loadImage(dataset+"/"+datasetFiles[i], colour, threshold);
             images.push_back(imageInstance);
-            double meanInstance = imageInstance.histogramMean(binSize);
-            histograms.push_back(imageInstance.getHistogram());
-            histogramMeans.push_back(meanInstance);
+
+            if (threshold){
+                vector<int> temp = imageInstance.thresholdImage();
+                /* Display Thresholded Data */
+                // cout << "Threshold Length: " << temp.size() << endl;
+                // for (int j=0; j < temp.size(); j++){
+                //     cout << temp[j] << " ";
+                // }
+                // cout << "\n\n";
+                histograms.push_back(temp); //add threshold image
+            }
+            else{
+                imageInstance.generateHistogram(binSize);
+                histograms.push_back(imageInstance.getHistogram()); //add histogram feature
+            }
+            
         }
 
         createClusters(numberOfClusters);

@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void SLDALE003::Image::loadImage(string fileName, const bool colour){
+void SLDALE003::Image::loadImage(string fileName, const bool colour, const bool threshold){
 
     size_t pos = fileName.find("/") + 1;
     imageName = fileName.substr(pos);
@@ -53,7 +53,7 @@ void SLDALE003::Image::loadImage(string fileName, const bool colour){
         inputFile.read((char*)inputData, colourSize);
         inputFile.close();
 
-        if(colour){
+        if(colour & !threshold){
             /* Populate Colour Data Vector */
             for(int i=0; i < colourSize; i++){
                 data.push_back(inputData[i]);
@@ -63,15 +63,10 @@ void SLDALE003::Image::loadImage(string fileName, const bool colour){
         /* Colour Conversion Equation Implementation */
             int sumCounter = 0;
             while(sumCounter < (colourSize-2)){
-                /* Possible Threshold Implementation */
-                // int value = 0.21*inputData[sumCounter] + 0.72*inputData[sumCounter+1] + 0.07*inputData[sumCounter+2];
-                // if(value > 150)
-                //     data.push_back(value);
-                // else
-                //     data.push_back(0);
                 data.push_back(0.21*inputData[sumCounter] + 0.72*inputData[sumCounter+1] + 0.07*inputData[sumCounter+2]);
                 sumCounter += 3;
             }
+
         }
 
         // View greyscale images
@@ -82,6 +77,19 @@ void SLDALE003::Image::loadImage(string fileName, const bool colour){
     else{
         cout << "File Not Found\n\n";
     }
+}
+
+vector<int> SLDALE003::Image::thresholdImage(){
+    vector<int> temp;
+    double mean = dataMean();
+    for (int i = 0; i < data.size(); i++){
+        int value = stoi(to_string(data[i]));
+        if(value > mean)
+            temp.push_back(255);
+        else
+            temp.push_back(0);
+    }
+    return temp;
 }
 
 void SLDALE003::Image::generateHistogram(const int binSize){
@@ -126,13 +134,21 @@ vector<int> SLDALE003::Image::getHistogram(){
     return histogram;
 }
 
-double SLDALE003::Image::histogramMean(int binSize){
-    double sum = 0;
-    for(int i = 0; i < histogram.size(); i++){
-        sum += histogram[i] * (i*binSize);
+vector<int> SLDALE003::Image::getData(){
+    vector<int> temp;
+    for(int i = 0; i < data.size(); i++){
+        temp.push_back(stoi(to_string(data[i])));
     }
-    double mean = sum / histogram.size();
-    // cout << "Histogram Mean: " << mean << "\n\n"; 
+    return temp;
+}
+
+double SLDALE003::Image::dataMean(){
+    double sum = 0;
+    for(int i = 0; i < data.size(); i++){
+        sum += stoi(to_string(data[i]));
+    }
+    double mean = sum / data.size();
+    // cout << "Data Mean: " << mean << "\n\n"; 
     return mean;
 }
 

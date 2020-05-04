@@ -66,7 +66,6 @@ void SLDALE003::Image::loadImage(string fileName, const bool colour, const bool 
                 data.push_back(0.21*inputData[sumCounter] + 0.72*inputData[sumCounter+1] + 0.07*inputData[sumCounter+2]);
                 sumCounter += 3;
             }
-
         }
 
         // View greyscale images
@@ -132,14 +131,6 @@ void SLDALE003::Image::generateHistogram(const int binSize){
 
 vector<int> SLDALE003::Image::getHistogram(){
     return histogram;
-}
-
-vector<int> SLDALE003::Image::getData(){
-    vector<int> temp;
-    for(int i = 0; i < data.size(); i++){
-        temp.push_back(stoi(to_string(data[i])));
-    }
-    return temp;
 }
 
 double SLDALE003::Image::dataMean(){

@@ -77,7 +77,7 @@ I did explore using additional feautures to classify the images such as applying
 * Computing the mean of this image data to determine an appropriate threshold
 * Iterating through the data assigning either 0 or 255 to each element depending on its value compared to the threshold
 
-This method yields greater accuracy as the image is now separated into a foreground and background. This allows the images to be clustered according to their shape without considering partial pixel values that may have affected accuracy (like the histogram feauture).
+I think this method would yield greater accuracy as the image is now separated into a foreground and background. This allows the images to be clustered according to their shape without considering partial pixel values that may have affected accuracy (like the histogram feauture). Unfortunately, this feauture did not perform as well as expected.
 
 Source: https://en.wikipedia.org/wiki/Thresholding_(image_processing)
 

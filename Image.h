@@ -24,8 +24,7 @@ namespace SLDALE003{
         public:
             Image();
             ~Image();
-
-            std::vector<int> getData();
+            
             std::vector<int> getHistogram();
             std::string getImageName();
 

@@ -45,6 +45,9 @@ string exec(string command) {
 /* Create Initial Clusters from Random Subset of Histograms */
 void createClusters(const int numClusters){
     srand(time(0)); //using time to set the random seed
+    /* Selecting random initial clusters or equally spaced clusters can be used */
+    // int r = 0;s
+    // int spacing = histograms.size()/numClusters;
     for(int i=0; i < numClusters; i++){
         SLDALE003::Cluster clusterInstance;
         vector<int> randomHist;
@@ -53,6 +56,7 @@ void createClusters(const int numClusters){
         randomHist = histograms[r];
         clusterInstance.centroid = {randomHist};
         clusters.push_back(clusterInstance);
+        // r += spacing;
     }
 }
 
